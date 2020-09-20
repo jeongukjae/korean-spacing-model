@@ -1,9 +1,8 @@
 import json
-from typing import List, Tuple
 from argparse import ArgumentParser
+from typing import List, Tuple
 
 import tensorflow as tf
-import tensorflow_text as text
 
 parser = ArgumentParser()
 parser.add_argument("--train-file", type=str, required=True)
@@ -40,6 +39,10 @@ class SpacingModel(tf.keras.Model):
             )
             for kernel_size, filter_size in conv_kernel_and_filter_sizes
         ]
+        self.pools = [
+            tf.keras.layers.MaxPooling1D(pool_size=kernel_size, data_format="channels_first")
+            for kernel_size, _ in conv_kernel_and_filter_sizes
+        ]
         self.dropout1 = tf.keras.layers.Dropout(rate=dropout_rate)
         self.output_dense1 = tf.keras.layers.Dense(hidden_size, activation=dense_activation)
         self.dropout2 = tf.keras.layers.Dropout(rate=dropout_rate)
@@ -53,7 +56,9 @@ class SpacingModel(tf.keras.Model):
         # embeddings: (Batch Size, Sequence Length, Hidden Size)
         embeddings = self.embeddings(input_tensor)
         # features: (Batch Size, Sequence Length, sum(#filters))
-        features = self.dropout1(tf.concat([conv(embeddings) for conv in self.convs], axis=-1))
+        features = self.dropout1(
+            tf.concat([pool(conv(embeddings)) for conv, pool in zip(self.convs, self.pools)], axis=-1)
+        )
         # projected: (Batch Size, Sequence Length, Hidden Size)
         projected = self.dropout2(self.output_dense1(features))
         # (Batch Size, Sequence Length, 2)
@@ -79,7 +84,6 @@ def string_to_example(
             # 다음 char가 space가 아니고, 문장 끝이 아닐 때 add_prob의 확률로 space 추가
             # 이번 char가 space일 때
             is_next_char_space = tf.cond(i < sequence_length - 1, lambda: bytes_array[i + 1] == " ", lambda: False)
-            is_not_eos = i != sequence_length - 1
 
             state = tf.cond(
                 is_next_char_space,
@@ -195,7 +199,7 @@ def main():
     )
     dev_dataset = (
         tf.data.TextLineDataset(tf.constant([args.dev_file]))
-        .shuffle(100000)
+        .shuffle(10000)
         .map(
             string_to_example(vocab_table),
             num_parallel_calls=tf.data.experimental.AUTOTUNE,
@@ -217,7 +221,6 @@ def main():
         loss=SparseCategoricalCrossentropyWithIgnore(from_logits=True, ignore_id=-1),
         metrics=[sparse_categorical_accuracy_with_ignore],
     )
-    model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath="./models/checkpoint-{epoch}.ckpt")
     model.fit(
         train_dataset,
         epochs=config["epochs"],
@@ -225,8 +228,8 @@ def main():
         steps_per_epoch=400,
         callbacks=[
             tf.keras.callbacks.ModelCheckpoint(filepath="./models/checkpoint-{epoch}.ckpt"),
-            tf.keras.callbacks.TensorBoard(log_dir='./logs'),
-            tf.keras.callbacks.ReduceLROnPlateau(patience=2, verbose=1)
+            tf.keras.callbacks.TensorBoard(log_dir="./logs"),
+            tf.keras.callbacks.ReduceLROnPlateau(patience=2, verbose=1),
         ],
     )
 

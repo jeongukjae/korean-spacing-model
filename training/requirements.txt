@@ -1,5 +1,4 @@
 tensorflow
-tensorflow-text
 
 # for dev
 black

@@ -1,8 +1,6 @@
 from argparse import ArgumentParser
 
-parser = ArgumentParser(
-    description="Remove empty line and title line in `in-file` and write to the `out-file`."
-)
+parser = ArgumentParser(description="Remove empty line and title line in `in-file` and write to the `out-file`.")
 parser.add_argument("--in-file", type=str, required=True)
 parser.add_argument("--out-file", type=str, required=True)
 
