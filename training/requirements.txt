@@ -1,4 +1,5 @@
 tensorflow
+tensorflowjs
 
 # for dev
 black
