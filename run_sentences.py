@@ -39,7 +39,7 @@ def main():
     )
 
     model.load_weights(args.model_file)
-    model(tf.keras.Input((None, None), dtype=tf.int32))
+    model(tf.keras.Input([None], dtype=tf.int32))
     print(model.summary())
 
     inference = get_inference_fn(model, vocab_table)
