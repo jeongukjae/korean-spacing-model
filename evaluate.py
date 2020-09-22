@@ -3,13 +3,20 @@ from argparse import ArgumentParser
 
 import tensorflow as tf
 
-from train import SpacingModel, string_to_example, sparse_categorical_accuracy_with_ignore, SparseCategoricalCrossentropyWithIgnore
+from train import (
+    SpacingModel,
+    string_to_example,
+    sparse_categorical_accuracy_with_ignore,
+    SparseCategoricalCrossentropyWithIgnore,
+)
 
 parser = ArgumentParser()
 parser.add_argument("--char-file", type=str, required=True)
 parser.add_argument("--model-file", type=str, required=True)
 parser.add_argument("--training-config", type=str, required=True)
 parser.add_argument("--test-file", type=str, required=True)
+parser.add_argument("--add-prob", type=float, required=True)
+parser.add_argument("--delete-prob", type=float, required=True)
 
 
 def main():
@@ -30,7 +37,7 @@ def main():
         tf.data.TextLineDataset(tf.constant([args.test_file]))
         .shuffle(10000)
         .map(
-            string_to_example(vocab_table),
+            string_to_example(vocab_table, delete_prob=args.delete_prob, add_prob=args.add_prob),
             num_parallel_calls=tf.data.experimental.AUTOTUNE,
         )
         .batch(config["val_batch_size"])

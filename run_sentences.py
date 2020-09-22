@@ -10,6 +10,7 @@ parser.add_argument("--char-file", type=str, required=True)
 parser.add_argument("--model-file", type=str, required=True)
 parser.add_argument("--training-config", type=str, required=True)
 
+
 def main():
     args = parser.parse_args()
 
@@ -83,6 +84,7 @@ def convert_output_to_string(byte_array, model_output):
         shape_invariants=(tf.TensorShape([]), tf.TensorShape([None])),
     )
     return strings_result
+
 
 if __name__ == "__main__":
     main()
