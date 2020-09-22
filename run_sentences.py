@@ -24,11 +24,6 @@ def main():
         vocab_initializer = tf.lookup.KeyValueTensorInitializer(keys, values, key_dtype=tf.string, value_dtype=tf.int32)
         vocab_table = tf.lookup.StaticHashTable(vocab_initializer, default_value=3)
 
-        inverse_vocab_initializer = tf.lookup.KeyValueTensorInitializer(
-            values, keys, value_dtype=tf.string, key_dtype=tf.int32
-        )
-        inverse_vocab_table = tf.lookup.StaticHashTable(inverse_vocab_initializer, default_value="<unk>")
-
     model = SpacingModel(
         config["vocab_size"],
         config["hidden_size"],
@@ -40,7 +35,7 @@ def main():
 
     model.load_weights(args.model_file)
     model(tf.keras.Input([None], dtype=tf.int32))
-    print(model.summary())
+    model.summary()
 
     inference = get_inference_fn(model, vocab_table)
 
@@ -63,6 +58,7 @@ def get_inference_fn(model, vocab_table):
         return convert_output_to_string(byte_array, model_output)
 
     return inference
+
 
 def convert_output_to_string(byte_array, model_output):
     sequence_length = tf.size(model_output)
