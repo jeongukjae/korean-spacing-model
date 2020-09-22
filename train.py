@@ -40,8 +40,8 @@ class SpacingModel(tf.keras.Model):
             for kernel_size, filter_size in conv_kernel_and_filter_sizes
         ]
         self.pools = [
-            tf.keras.layers.MaxPooling1D(pool_size=kernel_size, data_format="channels_first")
-            for kernel_size, _ in conv_kernel_and_filter_sizes
+            tf.keras.layers.MaxPooling1D(pool_size=filter_size, data_format="channels_first")
+            for _, filter_size in conv_kernel_and_filter_sizes
         ]
         self.dropout1 = tf.keras.layers.Dropout(rate=dropout_rate)
         self.output_dense1 = tf.keras.layers.Dense(hidden_size, activation=dense_activation)
@@ -70,7 +70,7 @@ def string_to_example(
     encoding: str = "UTF-8",
     max_length: int = 256,
     delete_prob: float = 0.5,
-    add_prob: float = 0.3,
+    add_prob: float = 0.15,
 ):
     @tf.function
     def _inner(tensors: tf.Tensor):

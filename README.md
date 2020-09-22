@@ -57,14 +57,14 @@ Per sentence: 0.0005949740409851074 s
 
 사용한 모델은 [train.py#L14](https://github.com/jeongukjae/korean-spacing-model/blob/master/train.py#L14)를 참고하시기 바랍니다. 여러개의 Conv1D + MaxPool1D 결과물을 Concat 한 뒤 FFN을 거칩니다.
 
-### `chars-4997`
+### `chars-4996`
 
 Character -> Index 매핑을 지원하기 위해 사용하는 파일입니다. 단순히 연속하는 character를 저장하고 사용하는 방법은 아래와 같습니다.
 
 ```python
 import tensorflow as tf
 
-with open('./resources/chars-4997') as f:
+with open('./resources/chars-4996') as f:
     content = f.read()
     keys = ["<pad>", "<s>", "</s>", "<unk>"] + list(content)
     values = list(range(len(keys)))
@@ -73,7 +73,7 @@ with open('./resources/chars-4997') as f:
     vocab_table = tf.lookup.StaticHashTable(vocab_initializer, default_value=3)
 ```
 
-왜 4997개만 넣어놓았나요??
+왜 4996개만 넣어놓았나요??
 
 ```python
 >>> from collections import Counter
@@ -85,7 +85,7 @@ with open('./resources/chars-4997') as f:
 0.9996295887538321
 ```
 
-위를 보면 4996개의 vocab만 가져도 char coverage 0.9996가 넘습니다. (4개는 unk + bos + eos + pad) 하지만 학습을 실수로 4997로 했어요. 그래서 vocab size가 5001입니다. 🤪
+위를 보면 4996개의 vocab만 가져도 char coverage 0.9996가 넘습니다. (4개는 unk + bos + eos + pad)
 
 ### `config.json`
 
@@ -93,7 +93,7 @@ with open('./resources/chars-4997') as f:
 
 ```json
 {
-    "vocab_size": 5001,
+    "vocab_size": 5000,
     "hidden_size": 48,
     "conv_activation": "relu",
     "dense_activation": "relu",
@@ -122,7 +122,7 @@ $ python train.py \
     --train-file train-text-file-path \
     --dev-file dev-text-file-path \
     --training-config ./resources/config.json \
-    --char-file ./resources/char-4997
+    --char-file ./resources/char-4996
 ```
 
 학습 설정이나 vocab을 바꾸고 싶다면 char-file이나 training-config를 바꾸면 됩니다.
@@ -133,7 +133,7 @@ $ python train.py \
 
 ```shell
 $ python run_sentences.py \
-    --char-file ./resources/char-4997 \
+    --char-file ./resources/char-4996 \
     --model-file ./checkpoint-path/checkpoin.ckpt \
     --training-config ./resources/config.json
 ...
