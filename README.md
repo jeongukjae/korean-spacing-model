@@ -29,26 +29,26 @@ Embedding을 거치고 난 뒤 여러개의 Conv1D - MaxPool1D 결과물을 Conc
 
 ```sh
 $ python benchmark.py --training-config ./resources/config.json --batch-size 128 --sequence-length 128
-2020-09-22 04:02:33.818441: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+2020-09-23 15:09:51.532982: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2020-09-22 04:02:33.836191: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7faf29d4bd50 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
-2020-09-22 04:02:33.836213: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-09-23 15:09:51.549687: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7f849ecfb6c0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-09-23 15:09:51.549708: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
 Warmup stage (10 iteration)
 Benchmark model speed with random input (1000 iteration)
-Elapsed: 12.52104902267456 s
-Per batch: 0.012521049022674561 s
-Per sentence: 9.782069548964501e-05 s
+Elapsed: 11.318554162979126 s
+Per batch: 0.011318554162979126 s
+Per sentence: 8.842620439827443e-05 s
 ```
 
-MacBook Pro (13-inch, 2020, Four Thunderbolt 3 ports) (2 GHz Quad-Core Intel Core i5)에서 batch size 128, sequence length 128로 CPU 추론을 돌릴 시 배치당 약 12ms, 한 문장당 약 0.09 ms 정도 소요됩니다.
+MacBook Pro (13-inch, 2020, Four Thunderbolt 3 ports) (2 GHz Quad-Core Intel Core i5)에서 batch size 128, sequence length 128로 CPU 추론을 돌릴 시 배치당 약 11ms, 한 문장당 약 0.088 ms 정도 소요됩니다.
 
 동일한 설정으로 batch size만 1로 설정할 경우 아래정도의 추론 시간이 나옵니다.
 
 ```sh
 Benchmark model speed with random input (1000 iteration)
-Elapsed: 0.5949740409851074 s
-Per batch: 0.0005949740409851074 s
-Per sentence: 0.0005949740409851074 s
+Elapsed: 0.5187258720397949 s
+Per batch: 0.0005187258720397949 s
+Per sentence: 0.0005187258720397949 s
 ```
 
 ## 학습용 파일들
