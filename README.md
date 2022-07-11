@@ -2,7 +2,7 @@
 
 한국어 문장 띄어쓰기(삭제/추가) 모델입니다. 데이터 준비 후 직접 학습이 가능하도록 작성하였습니다. 또한 전처리시에 띄어쓰기 정제를 할 것 같아 속도를 염두에 두고 작성하였습니다.
 
-[데모 사이트](https://jeongukjae.github.io/korean-spacing-model)에서 나무위키 텍스트([lovit/namuwikitext](https://github.com/lovit/namuwikitext)) 50만 문장에 대해 학습한 모델의 결과를 확인할 수 있습니다. 자세한 설명은 [블로그 포스트](https://jeongukjae.github.io/posts/korean-spacing-model/)를 확인하시기 바랍니다.
+[데모 사이트](https://jeongukjae.github.io/korean-spacing-model)에서 나무위키 텍스트([lovit/namuwikitext](https://github.com/lovit/namuwikitext)) 50만 문장에 대해 학습한 모델의 결과를 확인할 수 있습니다. 자세한 설명은 [블로그 포스트](https://blog.ukjae.io/posts/korean-spacing-model/)를 확인하시기 바랍니다.
 
 ## 모델 설명
 
